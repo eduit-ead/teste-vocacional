@@ -1,15 +1,28 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { WORDS, MIN_SELECTION, MAX_SELECTION } from './constants';
 import WordPill from './components/WordPill';
-import ResultModal from './components/ResultModal';
-import { getCourseRecommendation } from './services/geminiService';
+import ResultPage from './components/ResultPage';
+import LeadCaptureModal, { LeadData } from './components/LeadCaptureModal';
+import LoadingScreen from './components/LoadingScreen';
 import { Recommendation } from './types';
+import { AnimatePresence } from 'motion/react';
 
 const App: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Recommendation | null>(null);
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
+  const [isVocationalLoading, setIsVocationalLoading] = useState(false);
+  const [leadData, setLeadData] = useState<LeadData | null>(null);
+  const [hasCapturedLead, setHasCapturedLead] = useState(false);
+
+  useEffect(() => {
+    // 1. NA PÁGINA DO QUIZ (antes de abrir lightbox):
+    const gclid = new URLSearchParams(window.location.search).get('gclid');
+    if (gclid) {
+      localStorage.setItem('gclid', gclid);
+    }
+  }, []);
 
   const toggleWord = (id: string) => {
     setSelectedIds(prev => {
@@ -22,33 +35,76 @@ const App: React.FC = () => {
   };
 
   const handleCalculate = async () => {
-    if (selectedIds.length < MIN_SELECTION) return;
-    
-    setLoading(true);
-    const selectedWords = WORDS
-      .filter(w => selectedIds.includes(w.id))
-      .map(w => w.label);
-    
-    const recommendation = await getCourseRecommendation(selectedWords);
-    setResult(recommendation);
-    setLoading(false);
+    console.log('handleCalculate triggered. Selected count:', selectedIds.length);
+    if (selectedIds.length < MIN_SELECTION) {
+      console.log('Not enough words selected');
+      return;
+    }
+
+    if (hasCapturedLead && leadData) {
+      console.log('Lead already captured, skipping modal...');
+      setIsVocationalLoading(true);
+    } else {
+      console.log('Opening Lead Modal...');
+      setIsLeadModalOpen(true);
+    }
+  };
+
+  const handleLeadSuccess = useCallback((data: LeadData) => {
+    setLeadData(data);
+    setHasCapturedLead(true);
+    setIsVocationalLoading(true);
+  }, []);
+
+  const handleVocationalSuccess = useCallback((dados: Recommendation) => {
+    setResult(dados);
+    setIsVocationalLoading(false);
+  }, []);
+
+  const handleRedo = () => {
+    setResult(null);
+    setSelectedIds([]);
   };
 
   const canSubmit = selectedIds.length >= MIN_SELECTION;
   const progressPercentage = (selectedIds.length / MIN_SELECTION) * 100;
+
+  const selectedWords = useMemo(() => WORDS
+    .filter(w => selectedIds.includes(w.id))
+    .map(w => w.label), [selectedIds]);
+
+  const userDataForLoading = useMemo(() => leadData ? {
+    name: leadData.name,
+    phone: leadData.phone,
+    gclid: leadData.gclid
+  } : null, [leadData]);
+
+  if (result && leadData) {
+    return (
+      <ResultPage 
+        recommendation={result} 
+        userData={{
+          name: leadData.name,
+          phone: leadData.phone,
+          gclid: leadData.gclid
+        }}
+        onRedo={handleRedo}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center">
       {/* Hero Section */}
       <section className="custom-blue w-full pt-12 pb-16 px-4 flex flex-col items-center text-center">
         <div className="mb-8">
-          {/* Logo Placeholder */}
-          <div className="flex items-center gap-2">
-            <svg viewBox="0 0 100 100" className="w-10 h-10 fill-yellow-400">
-              <path d="M50 0L61.2 38.2H100L68.8 61.8L80 100L50 76.4L20 100L31.2 61.8L0 38.2H38.8L50 0Z" />
-            </svg>
-            <span className="text-white text-2xl font-black tracking-tighter">CRUZEIRO<span className="text-yellow-400">EAD</span></span>
-          </div>
+          {/* Official Logo from Wix URL */}
+          <img 
+            src="https://static.wixstatic.com/media/28db79_daac6eb2a3bf4e7393dd5651e96916f3~mv2.png" 
+            alt="Cruzeiro EAD" 
+            className="h-16 md:h-24 w-auto object-contain"
+            referrerPolicy="no-referrer"
+          />
         </div>
 
         <h1 className="text-white text-3xl md:text-5xl font-extrabold max-w-2xl leading-tight mb-4">
@@ -102,26 +158,16 @@ const App: React.FC = () => {
           <div className="mt-12 flex flex-col items-center">
             <button
               onClick={handleCalculate}
-              disabled={!canSubmit || loading}
+              disabled={!canSubmit}
               className={`
                 group relative w-full max-w-md h-16 rounded-2xl font-extrabold text-xl shadow-lg transition-all
-                ${canSubmit && !loading
+                ${canSubmit
                   ? 'custom-yellow text-slate-900 hover:scale-105 hover:shadow-yellow-400/20 active:scale-95'
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed'}
               `}
             >
-              {loading ? (
-                <div className="flex items-center justify-center gap-3">
-                  <svg className="animate-spin h-6 w-6 text-slate-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Processando...
-                </div>
-              ) : (
-                'Ver meu resultado'
-              )}
-              {canSubmit && !loading && (
+              Ver meu resultado
+              {canSubmit && (
                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center animate-bounce shadow-md">!</div>
               )}
             </button>
@@ -140,17 +186,36 @@ const App: React.FC = () => {
       <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-100 shadow-2xl z-40">
         <button
           onClick={handleCalculate}
-          disabled={!canSubmit || loading}
+          disabled={!canSubmit}
           className={`
             w-full h-14 rounded-xl font-bold transition-all flex items-center justify-center
-            ${canSubmit && !loading ? 'custom-yellow text-slate-900 shadow-lg' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}
+            ${canSubmit ? 'custom-yellow text-slate-900 shadow-lg' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}
           `}
         >
-          {loading ? 'Carregando...' : canSubmit ? 'Ver meu resultado' : `Escolha mais ${MIN_SELECTION - selectedIds.length}`}
+          {canSubmit ? 'Ver meu resultado' : `Escolha mais ${MIN_SELECTION - selectedIds.length}`}
         </button>
       </div>
+      
+      <LeadCaptureModal 
+        isOpen={isLeadModalOpen}
+        onClose={() => setIsLeadModalOpen(false)}
+        onSuccess={handleLeadSuccess}
+        pageTitle="Descubra seu Curso | Perfil Profissional"
+      />
 
-      {result && <ResultModal recommendation={result} onClose={() => setResult(null)} />}
+      <AnimatePresence>
+        {isVocationalLoading && userDataForLoading && (
+          <LoadingScreen 
+            palavras={selectedWords}
+            userData={userDataForLoading}
+            onSuccess={handleVocationalSuccess}
+            onError={(err) => {
+              console.error(err);
+              setIsVocationalLoading(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
