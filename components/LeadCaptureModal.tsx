@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { X } from 'lucide-react';
+import { proxyWebhook } from '../services/api';
 import PrivacyPolicyModal from './PrivacyPolicyModal';
 
 interface LeadCaptureModalProps {
@@ -110,13 +110,11 @@ const LeadCaptureModal: React.FC<LeadCaptureModalProps> = ({ isOpen, onClose, on
         lgpd: data.lgpd
       };
 
-      const response = await axios.post('/api/proxy/valida-vocacional', payload, {
-        timeout: 60000
-      });
+      const data = await proxyWebhook('valida-vocacional', payload);
 
-      console.log('Webhook response:', response.data);
+      console.log('Webhook response:', data);
 
-      if (response.data.whatsapp_valido === true) {
+      if (data.whatsapp_valido === true) {
         // Sucesso - segue para resultado
         setProgress(100);
         setTimeout(() => {
@@ -124,7 +122,7 @@ const LeadCaptureModal: React.FC<LeadCaptureModalProps> = ({ isOpen, onClose, on
           setLoading(false);
           onClose();
         }, 500);
-      } else if (response.data.whatsapp_valido === false) {
+      } else if (data.whatsapp_valido === false) {
         // WhatsApp inválido
         setError("Esse número não possui WhatsApp ativo. Verifique o número digitado.");
         setLoading(false);

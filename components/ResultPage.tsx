@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import axios from 'axios';
+import { proxyWebhook } from '../services/api';
 import { 
   CheckCircle2, 
   BookOpen, 
@@ -137,7 +137,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRed
     
     // 1. Gravar no CRM via Proxy
     try {
-      const response = await axios.post('/api/proxy/atualiza-lead', {
+      await proxyWebhook('atualiza-lead', {
         whatsapp: userData.phone,
         curso_clicado: course.curso,
         posicao_ranking: position,
@@ -145,7 +145,6 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRed
         acao: "interesse_curso_especifico",
         timestamp: new Date().toISOString()
       });
-      console.log("Webhook proxy response status:", response.status);
     } catch (err) {
       console.error('Erro ao atualizar CRM via proxy:', err);
     }

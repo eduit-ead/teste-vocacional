@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import { Star, Brain, Sparkles, RefreshCw } from 'lucide-react';
+import { proxyWebhook } from '../services/api';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface LoadingScreenProps {
@@ -60,12 +60,10 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ palavras, userData, onSuc
       console.log("Payload:", payload);
 
       try {
-        const response = await axios.post('/api/proxy/vocacional', payload, {
-          timeout: 60000
-        });
-        
-        console.log("Resposta recebida com sucesso:", response.data);
-        resultDataRef.current = response.data;
+        const data = await proxyWebhook('vocacional', payload);
+
+        console.log("Resposta recebida com sucesso:", data);
+        resultDataRef.current = data;
         setIsFinished(true);
       } catch (err) {
         console.error('Erro no webhook vocacional:', err);
