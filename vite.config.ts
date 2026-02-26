@@ -8,6 +8,24 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        proxy: {
+          '/api/proxy': {
+            target: 'https://n8n-new-n8n.ca31ey.easypanel.host',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api\/proxy/, '/webhook'),
+          },
+        },
+      },
+      preview: {
+        port: 3000,
+        host: '0.0.0.0',
+        proxy: {
+          '/api/proxy': {
+            target: 'https://n8n-new-n8n.ca31ey.easypanel.host',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api\/proxy/, '/webhook'),
+          },
+        },
       },
       plugins: [react()],
       define: {
