@@ -110,11 +110,11 @@ const LeadCaptureModal: React.FC<LeadCaptureModalProps> = ({ isOpen, onClose, on
         lgpd: data.lgpd
       };
 
-      const data = await proxyWebhook('valida-vocacional', payload);
+      const response = await proxyWebhook('valida-vocacional', payload);
 
-      console.log('Webhook response:', data);
+      console.log('Webhook response:', response);
 
-      if (data.whatsapp_valido === true) {
+      if (response.whatsapp_valido === true) {
         // Sucesso - segue para resultado
         setProgress(100);
         setTimeout(() => {
@@ -122,12 +122,11 @@ const LeadCaptureModal: React.FC<LeadCaptureModalProps> = ({ isOpen, onClose, on
           setLoading(false);
           onClose();
         }, 500);
-      } else if (data.whatsapp_valido === false) {
+      } else if (response.whatsapp_valido === false) {
         // WhatsApp inválido
         setError("Esse número não possui WhatsApp ativo. Verifique o número digitado.");
         setLoading(false);
       } else {
-        // Resposta inesperada
         setError("Erro na validação. Tente novamente.");
         setLoading(false);
       }
