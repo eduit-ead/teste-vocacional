@@ -92,37 +92,32 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-slate-50" style={{ fontFamily: "'Inter', sans-serif" }}>
 
-      {/* Sticky header */}
-      <header className="sticky top-0 z-50 bg-[#002D5E] w-full shadow-md" style={{ height: 72 }}>
-        <div className="max-w-6xl mx-auto px-4 h-full flex items-center justify-between">
+      {/* Quiz hero — imersivo, sem header/nav */}
+      <section id="quiz" className="custom-blue w-full pt-10 pb-14 px-4 flex flex-col items-center text-center">
+
+        {/* Logo Cruzeiro EAD — SVG nativo, sem rasterização */}
+        <div className="mb-8 flex items-center justify-center">
           <img
             src="https://static.wixstatic.com/media/28db79_daac6eb2a3bf4e7393dd5651e96916f3~mv2.png"
             alt="Cruzeiro EAD — Ensino Superior EAD"
-            className="h-10 w-auto object-contain"
+            style={{
+              width: 'clamp(160px, 20vw, 220px)',
+              height: 'auto',
+              imageRendering: 'auto',
+              display: 'block',
+            }}
             referrerPolicy="no-referrer"
+            draggable={false}
           />
-          <div className="flex items-center gap-3">
-            <a
-              href={COURSES_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center border border-white/30 text-white font-semibold text-sm px-4 py-2 rounded-lg hover:bg-white/10 hover:border-white/50 active:scale-95 transition-all duration-200 min-h-[44px]"
-            >
-              Ver cursos
-            </a>
-          </div>
         </div>
-      </header>
 
-      {/* Quiz hero banner */}
-      <section id="quiz" className="custom-blue w-full pt-10 pb-14 px-4 flex flex-col items-center text-center">
         <h1 className="text-white text-2xl md:text-4xl font-extrabold max-w-2xl leading-tight mb-3">
-          Descubra qual curso combina com você
+          Veja qual curso combina com você
         </h1>
 
         <p className="text-blue-100 text-base md:text-lg mb-8 max-w-lg opacity-90">
-          Escolha entre <span className="text-yellow-400 font-bold">{MIN_SELECTION}</span> e{' '}
-          <span className="text-yellow-400 font-bold">{MAX_SELECTION}</span> palavras que mais combinam com seu perfil.
+          Escolha de <span className="text-yellow-400 font-bold">{MIN_SELECTION}</span> a{' '}
+          <span className="text-yellow-400 font-bold">{MAX_SELECTION}</span> palavras que tenham a ver com você.
         </p>
 
         {/* Counter Widget */}
