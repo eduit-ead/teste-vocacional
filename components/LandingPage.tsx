@@ -7,12 +7,25 @@ interface LandingPageProps {
 const COURSES_URL = 'https://www.cruzeiroead.com.br/graduacao';
 
 const CheckBadge: React.FC<{ label: string }> = ({ label }) => (
-  <span className="inline-flex items-center gap-1.5 bg-slate-100 border border-slate-200 rounded-full px-3 py-1.5 text-slate-700 text-sm font-medium">
-    <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+  <span className="inline-flex items-center gap-1.5 bg-white/15 border border-white/25 rounded-full px-3.5 py-1.5 text-white text-sm font-semibold">
+    <svg className="w-4 h-4 text-[#FFD700] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
       <polyline points="20 6 9 17 4 12" />
     </svg>
     {label}
   </span>
+);
+
+const PrimaryBtn: React.FC<{ label?: string; onClick: () => void; large?: boolean }> = ({
+  label = 'Fazer teste grátis',
+  onClick,
+  large = false,
+}) => (
+  <button
+    onClick={onClick}
+    className={`bg-[#FFD700] text-[#002D5E] font-extrabold rounded-xl shadow-md hover:bg-[#E6C200] hover:scale-[1.03] active:scale-95 transition-all duration-200 ${large ? 'text-lg px-10 py-4 min-h-[56px]' : 'text-base px-7 py-3.5 min-h-[48px]'}`}
+  >
+    {label}
+  </button>
 );
 
 const SectionCTA: React.FC<{ label?: string; onClick: () => void }> = ({
@@ -20,12 +33,7 @@ const SectionCTA: React.FC<{ label?: string; onClick: () => void }> = ({
   onClick,
 }) => (
   <div className="mt-10 flex justify-center">
-    <button
-      onClick={onClick}
-      className="bg-[#FFD700] text-[#002D5E] font-extrabold text-base px-8 py-4 rounded-xl shadow hover:bg-[#E6C200] hover:scale-105 active:scale-95 transition-all min-h-[52px]"
-    >
-      {label}
-    </button>
+    <PrimaryBtn label={label} onClick={onClick} />
   </div>
 );
 
@@ -89,7 +97,7 @@ const discoveries = [
 const audiences = [
   {
     icon: (
-      <svg className="w-6 h-6 text-[#FFD700]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+      <svg className="w-5 h-5 text-[#FFD700] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
@@ -97,7 +105,7 @@ const audiences = [
   },
   {
     icon: (
-      <svg className="w-6 h-6 text-[#FFD700]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+      <svg className="w-5 h-5 text-[#FFD700] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
       </svg>
     ),
@@ -105,7 +113,7 @@ const audiences = [
   },
   {
     icon: (
-      <svg className="w-6 h-6 text-[#FFD700]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+      <svg className="w-5 h-5 text-[#FFD700] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
       </svg>
     ),
@@ -113,7 +121,7 @@ const audiences = [
   },
   {
     icon: (
-      <svg className="w-6 h-6 text-[#FFD700]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+      <svg className="w-5 h-5 text-[#FFD700] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
       </svg>
     ),
@@ -124,7 +132,7 @@ const audiences = [
 const trustItems = [
   {
     icon: (
-      <svg className="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+      <svg className="w-6 h-6 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
       </svg>
     ),
@@ -132,7 +140,7 @@ const trustItems = [
   },
   {
     icon: (
-      <svg className="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+      <svg className="w-6 h-6 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
       </svg>
     ),
@@ -140,7 +148,7 @@ const trustItems = [
   },
   {
     icon: (
-      <svg className="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+      <svg className="w-6 h-6 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
         <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
       </svg>
     ),
@@ -167,74 +175,77 @@ const faqs = [
   },
 ];
 
+const HEADER_H = 72;
+
 const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 80);
     return () => clearTimeout(t);
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
 
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+      {/* ── STICKY HEADER ── */}
+      <header
+        style={{ height: HEADER_H }}
+        className={`sticky top-0 z-50 bg-[#002D5E] transition-shadow duration-200 ${scrolled ? 'shadow-lg' : ''}`}
+      >
+        <div className="max-w-6xl mx-auto px-4 h-full flex items-center justify-between">
           <img
             src="https://static.wixstatic.com/media/28db79_daac6eb2a3bf4e7393dd5651e96916f3~mv2.png"
-            alt="Cruzeiro EAD"
-            className="h-9 w-auto object-contain"
+            alt="Cruzeiro EAD — Ensino Superior EAD"
+            className="h-10 w-auto object-contain"
             referrerPolicy="no-referrer"
           />
-          <div className="flex items-center gap-3">
+          <nav className="flex items-center gap-3">
             <a
               href={COURSES_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center text-slate-600 font-medium text-sm hover:text-[#002D5E] transition-colors"
+              className="hidden sm:inline-flex items-center border border-white/30 text-white font-semibold text-sm px-4 py-2 rounded-lg hover:bg-white/10 hover:border-white/50 active:scale-95 transition-all duration-200 min-h-[44px]"
             >
               Ver cursos
             </a>
             <button
               onClick={onStartQuiz}
-              className="bg-[#FFD700] text-[#002D5E] font-bold text-sm px-5 py-2.5 rounded-lg hover:bg-[#E6C200] active:scale-95 transition-all min-h-[44px]"
+              className="bg-[#FFD700] text-[#002D5E] font-bold text-sm px-5 py-2.5 rounded-lg hover:bg-[#E6C200] hover:scale-[1.03] active:scale-95 transition-all duration-200 min-h-[44px] shadow"
             >
               Fazer teste grátis
             </button>
-          </div>
+          </nav>
         </div>
       </header>
 
-      {/* HERO */}
-      <section className="bg-[#002D5E] px-4 pt-16 pb-24 md:pt-24 md:pb-32 overflow-hidden relative">
-        <div
-          className="absolute inset-0 opacity-5 pointer-events-none"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 70% 40%, #FFD700 0%, transparent 60%)',
-          }}
-        />
-        <div
-          className={`max-w-3xl mx-auto text-center transition-all duration-700 ${
-            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-          }`}
-        >
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-8">
-            <span className="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse" />
+      {/* ── HERO ── */}
+      <section className="bg-[#002D5E] px-4 pt-14 pb-20 md:pt-20 md:pb-28 overflow-hidden relative">
+        <div className="absolute inset-0 opacity-[0.06] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 75% 35%, #FFD700 0%, transparent 55%)' }} />
+        <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+
+          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-7">
+            <span className="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse flex-shrink-0" />
             <span className="text-white/80 text-sm font-medium">+12.000 alunos já descobriram seu curso ideal</span>
           </div>
 
-          <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold leading-tight mb-5">
+          <h1 className="text-white text-[2rem] sm:text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold leading-tight mb-4">
             Descubra o curso ideal<br className="hidden sm:block" /> para você em 2 minutos
           </h1>
 
-          <p className="text-blue-200 text-lg md:text-xl mb-8 leading-relaxed opacity-90">
+          <p className="text-blue-200 text-lg md:text-xl mb-7 leading-relaxed">
             Teste vocacional gratuito com resultado imediato.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-3 mb-10">
+          <div className="flex flex-wrap justify-center gap-2.5 mb-9">
             <CheckBadge label="100% gratuito" />
             <CheckBadge label="Tempo médio 2 minutos" />
             <CheckBadge label="Resultado imediato" />
@@ -243,7 +254,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={onStartQuiz}
-              className="w-full sm:w-auto bg-[#FFD700] text-[#002D5E] font-extrabold text-lg px-10 py-4 rounded-xl shadow-lg shadow-black/20 hover:bg-[#E6C200] hover:scale-105 active:scale-95 transition-all min-h-[56px]"
+              className="w-full sm:w-auto bg-[#FFD700] text-[#002D5E] font-extrabold text-lg px-10 py-4 rounded-xl shadow-lg hover:bg-[#E6C200] hover:scale-[1.03] active:scale-95 transition-all duration-200 min-h-[56px]"
             >
               Fazer teste grátis
             </button>
@@ -251,7 +262,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
               href={COURSES_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto border-2 border-white/30 text-white font-semibold text-base px-8 py-4 rounded-xl hover:border-white/60 hover:bg-white/10 active:scale-95 transition-all min-h-[56px] flex items-center justify-center"
+              className="w-full sm:w-auto border-2 border-white/30 text-white font-semibold text-base px-8 py-4 rounded-xl hover:border-white/60 hover:bg-white/10 active:scale-95 transition-all duration-200 min-h-[56px] flex items-center justify-center"
             >
               Ver cursos e mensalidades
             </a>
@@ -259,7 +270,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
         </div>
       </section>
 
-      {/* COMO FUNCIONA */}
+      {/* ── COMO FUNCIONA ── */}
       <section className="bg-slate-50 px-4 py-16 md:py-24">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
@@ -273,7 +284,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
                 key={step.n}
                 className="bg-white rounded-2xl p-7 border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
               >
-                <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center mb-5 shadow-sm">
+                <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center mb-5">
                   <span className="text-[#002D5E] font-extrabold text-lg leading-none">{step.n}</span>
                 </div>
                 <h3 className="text-[#002D5E] font-bold text-lg mb-2 leading-snug">{step.title}</h3>
@@ -286,7 +297,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
         </div>
       </section>
 
-      {/* O QUE VOCÊ DESCOBRE */}
+      {/* ── O QUE VOCÊ DESCOBRE ── */}
       <section className="bg-white px-4 py-16 md:py-24">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
@@ -300,7 +311,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
                 key={item.title}
                 className="flex items-start gap-4 bg-slate-50 border border-slate-100 rounded-2xl p-6 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
               >
-                <div className="bg-[#f0f6ff] rounded-xl p-3 flex-shrink-0">{item.icon}</div>
+                <div className="bg-[#eef4ff] rounded-xl p-3 flex-shrink-0">{item.icon}</div>
                 <div>
                   <h3 className="text-[#002D5E] font-bold text-base mb-1 leading-snug">{item.title}</h3>
                   <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
@@ -313,23 +324,23 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
         </div>
       </section>
 
-      {/* PARA QUEM É */}
+      {/* ── PARA QUEM É ── */}
       <section className="bg-[#002D5E] px-4 py-16 md:py-24">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-white text-2xl md:text-4xl font-extrabold mb-3">Para quem é este teste?</h2>
-            <p className="text-blue-200 text-base md:text-lg opacity-90">Para qualquer pessoa que queira tomar uma decisão mais segura</p>
+            <p className="text-blue-200 text-base md:text-lg">Para qualquer pessoa que queira tomar uma decisão mais segura</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {audiences.map((item) => (
               <div
                 key={item.title}
-                className="flex items-center gap-4 bg-white/10 border border-white/15 rounded-2xl px-6 py-5 hover:bg-white/15 transition-colors"
+                className="flex items-center gap-4 bg-white/10 border border-white/15 rounded-2xl px-6 py-5 hover:bg-white/15 transition-colors duration-200"
               >
-                <div className="flex-shrink-0">{item.icon}</div>
-                <p className="text-white font-medium text-base leading-snug">{item.title}</p>
-                <svg className="ml-auto flex-shrink-0 w-5 h-5 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                {item.icon}
+                <p className="text-white font-medium text-base leading-snug flex-1">{item.title}</p>
+                <svg className="flex-shrink-0 w-4 h-4 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -339,7 +350,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
           <div className="mt-10 flex justify-center">
             <button
               onClick={onStartQuiz}
-              className="bg-[#FFD700] text-[#002D5E] font-extrabold text-base px-8 py-4 rounded-xl shadow hover:bg-[#E6C200] hover:scale-105 active:scale-95 transition-all min-h-[52px]"
+              className="bg-[#FFD700] text-[#002D5E] font-extrabold text-base px-8 py-4 rounded-xl shadow hover:bg-[#E6C200] hover:scale-[1.03] active:scale-95 transition-all duration-200 min-h-[52px]"
             >
               Fazer teste grátis
             </button>
@@ -347,11 +358,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
         </div>
       </section>
 
-      {/* CONFIANÇA */}
+      {/* ── CONFIANÇA ── */}
       <section className="bg-white px-4 py-14 md:py-20 border-y border-slate-100">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-[#002D5E] text-2xl md:text-3xl font-extrabold mb-8">Transparência e segurança em cada etapa</h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
             {trustItems.map((item) => (
               <div key={item.label} className="flex items-center gap-3">
                 {item.icon}
@@ -363,18 +374,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ── FAQ ── */}
       <section className="bg-slate-50 px-4 py-16 md:py-24">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">
-            <h2 className="text-[#002D5E] text-2xl md:text-3xl font-extrabold mb-3">Perguntas frequentes</h2>
+            <h2 className="text-[#002D5E] text-2xl md:text-3xl font-extrabold">Perguntas frequentes</h2>
           </div>
           <div className="space-y-3">
             {faqs.map((faq, i) => (
               <div key={i} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-slate-50 transition-colors min-h-[56px]"
+                  className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-slate-50 transition-colors duration-150 min-h-[60px]"
                   aria-expanded={openFaq === i}
                 >
                   <span className="text-[#002D5E] font-semibold text-base pr-4">{faq.q}</span>
@@ -396,19 +407,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
         </div>
       </section>
 
-      {/* CTA FINAL */}
+      {/* ── CTA FINAL ── */}
       <section className="bg-[#002D5E] px-4 py-16 md:py-24">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-white text-2xl md:text-4xl font-extrabold mb-4 leading-tight">
             Descubra agora seu curso ideal
           </h2>
-          <p className="text-blue-200 text-lg mb-10 opacity-90">
+          <p className="text-blue-200 text-lg mb-10">
             Gratuito. Resultado imediato. Sem compromisso.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={onStartQuiz}
-              className="w-full sm:w-auto bg-[#FFD700] text-[#002D5E] font-extrabold text-lg px-10 py-4 rounded-xl shadow-lg hover:bg-[#E6C200] hover:scale-105 active:scale-95 transition-all min-h-[56px]"
+              className="w-full sm:w-auto bg-[#FFD700] text-[#002D5E] font-extrabold text-lg px-10 py-4 rounded-xl shadow-lg hover:bg-[#E6C200] hover:scale-[1.03] active:scale-95 transition-all duration-200 min-h-[56px]"
             >
               Fazer teste grátis
             </button>
@@ -416,7 +427,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
               href={COURSES_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto border-2 border-white/30 text-white font-semibold text-base px-8 py-4 rounded-xl hover:border-white/60 hover:bg-white/10 active:scale-95 transition-all min-h-[56px] flex items-center justify-center"
+              className="w-full sm:w-auto border-2 border-white/30 text-white font-semibold text-base px-8 py-4 rounded-xl hover:border-white/60 hover:bg-white/10 active:scale-95 transition-all duration-200 min-h-[56px] flex items-center justify-center"
             >
               Ver cursos e mensalidades
             </a>
@@ -424,26 +435,27 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-[#001e3f] px-4 py-6">
+      {/* ── FOOTER ── */}
+      <footer className="bg-[#001e3f] px-4 py-7">
         <div className="max-w-4xl mx-auto text-center">
           <img
             src="https://static.wixstatic.com/media/28db79_daac6eb2a3bf4e7393dd5651e96916f3~mv2.png"
             alt="Cruzeiro EAD"
-            className="h-8 w-auto object-contain mx-auto mb-3 opacity-60"
+            className="h-8 w-auto object-contain mx-auto mb-3 opacity-50"
             referrerPolicy="no-referrer"
+            loading="lazy"
           />
-          <p className="text-white/35 text-xs">
+          <p className="text-white/30 text-xs">
             &copy; {new Date().getFullYear()} Cruzeiro EAD. Todos os direitos reservados.
           </p>
         </div>
       </footer>
 
-      {/* Mobile Sticky CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-3 bg-white/90 backdrop-blur border-t border-slate-200 shadow-xl">
+      {/* ── MOBILE STICKY CTA ── */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-safe-area-inset-bottom pb-4 pt-3 bg-white border-t border-slate-200 shadow-[0_-4px_16px_rgba(0,0,0,0.10)]">
         <button
           onClick={onStartQuiz}
-          className="w-full bg-[#FFD700] text-[#002D5E] font-extrabold text-base py-4 rounded-xl shadow active:scale-95 transition-all min-h-[52px]"
+          className="w-full bg-[#FFD700] text-[#002D5E] font-extrabold text-base py-4 rounded-xl shadow-md active:scale-95 transition-all duration-200 min-h-[52px]"
         >
           Fazer teste grátis — Gratuito
         </button>
