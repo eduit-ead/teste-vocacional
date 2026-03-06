@@ -236,7 +236,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
 
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-7">
             <span className="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse flex-shrink-0" />
-            <span className="text-white/80 text-sm font-medium">+35.000 alunos já descobriram seu curso ideal</span>
+            <span className="text-white/80 text-sm font-medium">+45.000 alunos já descobriram seu curso ideal</span>
           </div>
 
           <h1 className="text-white text-[2rem] sm:text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold leading-tight mb-4">
