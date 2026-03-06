@@ -98,15 +98,16 @@ const App: React.FC = () => {
         {/* Logo Cruzeiro EAD — SVG nativo, sem rasterização */}
         <div className="mb-8 flex items-center justify-center">
           <img
-            src="https://static.wixstatic.com/media/28db79_daac6eb2a3bf4e7393dd5651e96916f3~mv2.png"
+            src="https://static.wixstatic.com/media/a9822b_f8f6943da75645e7912e3c38711fe5e5~mv2.png/v1/fill/w_446,h_120,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/a9822b_f8f6943da75645e7912e3c38711fe5e5~mv2.png"
             alt="Cruzeiro EAD — Ensino Superior EAD"
             style={{
               width: 'clamp(160px, 20vw, 220px)',
               height: 'auto',
-              imageRendering: 'auto',
+              objectFit: 'contain',
               display: 'block',
             }}
             referrerPolicy="no-referrer"
+            decoding="async"
             draggable={false}
           />
         </div>

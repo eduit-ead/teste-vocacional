@@ -5,6 +5,7 @@ interface LandingPageProps {
 }
 
 const COURSES_URL = 'https://www.cruzeiroead.com.br/graduacao';
+const LOGO_URL = 'https://static.wixstatic.com/media/a9822b_f8f6943da75645e7912e3c38711fe5e5~mv2.png/v1/fill/w_446,h_120,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/a9822b_f8f6943da75645e7912e3c38711fe5e5~mv2.png';
 
 const CheckBadge: React.FC<{ label: string }> = ({ label }) => (
   <span className="inline-flex items-center gap-1.5 bg-white/15 border border-white/25 rounded-full px-3.5 py-1.5 text-white text-sm font-semibold">
@@ -203,12 +204,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
       >
         <div className="max-w-6xl mx-auto px-4 h-full flex items-center justify-between">
           <img
-            src="https://static.wixstatic.com/media/28db79_daac6eb2a3bf4e7393dd5651e96916f3~mv2.png"
+            src={LOGO_URL}
             alt="Cruzeiro EAD — Ensino Superior EAD"
-            className="h-10 w-auto object-contain"
+            style={{ height: 40, width: 'auto', objectFit: 'contain', display: 'block', flexShrink: 0 }}
             referrerPolicy="no-referrer"
+            decoding="async"
           />
-          <nav className="flex items-center gap-3">
+          <nav className="flex items-center gap-3 flex-shrink-0">
             <a
               href={COURSES_URL}
               target="_blank"
@@ -228,13 +230,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
       </header>
 
       {/* ── HERO ── */}
-      <section className="bg-[#002D5E] px-4 pt-14 pb-20 md:pt-20 md:pb-28 overflow-hidden relative">
+      <section className="bg-[#002D5E] px-4 pt-12 pb-16 md:pt-16 md:pb-20 overflow-hidden relative">
         <div className="absolute inset-0 opacity-[0.06] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 75% 35%, #FFD700 0%, transparent 55%)' }} />
         <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
 
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-7">
             <span className="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse flex-shrink-0" />
-            <span className="text-white/80 text-sm font-medium">+12.000 alunos já descobriram seu curso ideal</span>
+            <span className="text-white/80 text-sm font-medium">+35.000 alunos já descobriram seu curso ideal</span>
           </div>
 
           <h1 className="text-white text-[2rem] sm:text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold leading-tight mb-4">
@@ -271,10 +273,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
       </section>
 
       {/* ── COMO FUNCIONA ── */}
-      <section className="bg-slate-50 px-4 py-16 md:py-24">
+      <section className="bg-slate-50 px-4 py-12 md:py-16">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-[#002D5E] text-2xl md:text-4xl font-extrabold mb-3">Como funciona</h2>
+          <div className="text-center mb-10">
+            <h2 className="text-[#002D5E] text-2xl md:text-4xl font-extrabold mb-3">Como funciona?</h2>
             <p className="text-slate-500 text-base md:text-lg">Simples, rápido e sem complicação</p>
           </div>
 
@@ -298,9 +300,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
       </section>
 
       {/* ── O QUE VOCÊ DESCOBRE ── */}
-      <section className="bg-white px-4 py-16 md:py-24">
+      <section className="bg-white px-4 py-12 md:py-16">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10">
             <h2 className="text-[#002D5E] text-2xl md:text-4xl font-extrabold mb-3">O que você descobre com o teste?</h2>
             <p className="text-slate-500 text-base md:text-lg">Resultado personalizado gerado em instantes</p>
           </div>
@@ -325,9 +327,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
       </section>
 
       {/* ── PARA QUEM É ── */}
-      <section className="bg-[#002D5E] px-4 py-16 md:py-24">
+      <section className="bg-[#002D5E] px-4 py-12 md:py-16">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10">
             <h2 className="text-white text-2xl md:text-4xl font-extrabold mb-3">Para quem é este teste?</h2>
             <p className="text-blue-200 text-base md:text-lg">Para qualquer pessoa que queira tomar uma decisão mais segura</p>
           </div>
@@ -359,7 +361,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
       </section>
 
       {/* ── CONFIANÇA ── */}
-      <section className="bg-white px-4 py-14 md:py-20 border-y border-slate-100">
+      <section className="bg-white px-4 py-12 md:py-16 border-y border-slate-100">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-[#002D5E] text-2xl md:text-3xl font-extrabold mb-8">Transparência e segurança em cada etapa</h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
@@ -375,7 +377,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="bg-slate-50 px-4 py-16 md:py-24">
+      <section className="bg-slate-50 px-4 py-12 md:py-16">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-[#002D5E] text-2xl md:text-3xl font-extrabold">Perguntas frequentes</h2>
@@ -408,7 +410,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
       </section>
 
       {/* ── CTA FINAL ── */}
-      <section className="bg-[#002D5E] px-4 py-16 md:py-24">
+      <section className="bg-[#002D5E] px-4 py-12 md:py-16">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-white text-2xl md:text-4xl font-extrabold mb-4 leading-tight">
             Descubra agora seu curso ideal
@@ -439,11 +441,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
       <footer className="bg-[#001e3f] px-4 py-7">
         <div className="max-w-4xl mx-auto text-center">
           <img
-            src="https://static.wixstatic.com/media/28db79_daac6eb2a3bf4e7393dd5651e96916f3~mv2.png"
+            src={LOGO_URL}
             alt="Cruzeiro EAD"
-            className="h-8 w-auto object-contain mx-auto mb-3 opacity-50"
+            style={{ height: 32, width: 'auto', objectFit: 'contain', display: 'block', margin: '0 auto 12px', opacity: 0.5 }}
             referrerPolicy="no-referrer"
             loading="lazy"
+            decoding="async"
           />
           <p className="text-white/30 text-xs">
             &copy; {new Date().getFullYear()} Cruzeiro EAD. Todos os direitos reservados.
