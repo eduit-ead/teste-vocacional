@@ -7,7 +7,6 @@ import LeadCaptureModal, { LeadData } from './components/LeadCaptureModal';
 import LoadingScreen from './components/LoadingScreen';
 import { Recommendation } from './types';
 import { AnimatePresence } from 'motion/react';
-import { supabase } from './lib/supabase';
 
 const COURSES_URL = 'https://www.cruzeiroead.com.br/graduacao';
 
@@ -25,20 +24,6 @@ const App: React.FC = () => {
       localStorage.setItem('gclid', gclid);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
-  useEffect(() => {
-    const testConnection = async () => {
-      const { error } = await supabase
-        .from('vocacional_events')
-        .insert({ event_name: 'test_connection' });
-      if (error) {
-        console.error('Supabase test insert failed:', error);
-      } else {
-        console.log('Supabase test insert successful.');
-      }
-    };
-    testConnection();
   }, []);
 
   const toggleWord = (id: string) => {
