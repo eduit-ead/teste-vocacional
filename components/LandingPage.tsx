@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { trackEvent } from '../services/tracking';
 
 interface LandingPageProps {
   onStartQuiz: () => void;
@@ -183,7 +184,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
   const [visible, setVisible] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  const handleCoursesDirectClick = (origin: string) => {
+    trackEvent('courses_direct_click', { origin });
+  };
+
   useEffect(() => {
+    trackEvent('landing_view', { source: 'initial_load' });
     const t = setTimeout(() => setVisible(true), 80);
     return () => clearTimeout(t);
   }, []);
@@ -215,6 +221,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
               href={COURSES_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => handleCoursesDirectClick('header')}
               className="hidden sm:inline-flex items-center border border-white/30 text-white font-semibold text-sm px-4 py-2 rounded-lg hover:bg-white/10 hover:border-white/50 active:scale-95 transition-all duration-200 min-h-[44px]"
             >
               Ver cursos
@@ -264,6 +271,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
               href={COURSES_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => handleCoursesDirectClick('hero')}
               className="w-full sm:w-auto border-2 border-white/30 text-white font-semibold text-base px-8 py-4 rounded-xl hover:border-white/60 hover:bg-white/10 active:scale-95 transition-all duration-200 min-h-[56px] flex items-center justify-center"
             >
               Ver cursos e mensalidades
@@ -429,6 +437,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
               href={COURSES_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => handleCoursesDirectClick('cta_final')}
               className="w-full sm:w-auto border-2 border-white/30 text-white font-semibold text-base px-8 py-4 rounded-xl hover:border-white/60 hover:bg-white/10 active:scale-95 transition-all duration-200 min-h-[56px] flex items-center justify-center"
             >
               Ver cursos e mensalidades

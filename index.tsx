@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import LandingPage from './components/LandingPage';
+import { initTracking, trackEvent } from './services/tracking';
 
 const Root: React.FC = () => {
   const getPage = () => {
@@ -13,12 +14,17 @@ const Root: React.FC = () => {
   const [page, setPage] = useState<'landing' | 'quiz'>(getPage);
 
   useEffect(() => {
+    initTracking();
+  }, []);
+
+  useEffect(() => {
     const handlePop = () => setPage(getPage());
     window.addEventListener('popstate', handlePop);
     return () => window.removeEventListener('popstate', handlePop);
   }, []);
 
   const goToQuiz = () => {
+    trackEvent('quiz_start', { cta: 'comecar_teste' });
     window.history.pushState({}, '', '/quiz');
     setPage('quiz');
   };

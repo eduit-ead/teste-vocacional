@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { proxyWebhook } from '../services/api';
+import { trackEvent, flushEvents, updateLeadProfile } from '../services/tracking';
 import { 
   CheckCircle2, 
   BookOpen, 
@@ -109,10 +110,24 @@ const AreasChart: React.FC<{ areas?: RankedArea[] }> = ({ areas }) => {
 
 const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRedo }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const trackedResult = useRef(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+
+    if (!trackedResult.current) {
+      trackedResult.current = true;
+      const topCourse = recommendation.cursos_recomendados[0]?.curso ?? null;
+      trackEvent('result_view', {
+        quiz_profile: recommendation.perfil_dominante,
+        recommended_course: topCourse,
+      });
+      updateLeadProfile({
+        quizProfile: recommendation.perfil_dominante,
+        recommendedCourse: topCourse,
+      });
+    }
+  }, [recommendation]);
 
   function limparNomeCurso(nome: string) {
     return nome
@@ -133,9 +148,13 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRed
     .trim();
 
   const handleCourseClick = async (course: RecommendedCourse, position: number) => {
-    console.log("Clicou curso:", course.curso);
-    
-    // 1. Gravar no CRM via Proxy
+    trackEvent('course_click', {
+      course_name: course.curso,
+      origin: 'result',
+      position,
+    });
+    flushEvents();
+
     try {
       await proxyWebhook('atualiza-lead', {
         whatsapp: userData.phone,

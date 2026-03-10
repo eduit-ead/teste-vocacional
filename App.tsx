@@ -7,6 +7,7 @@ import LeadCaptureModal, { LeadData } from './components/LeadCaptureModal';
 import LoadingScreen from './components/LoadingScreen';
 import { Recommendation } from './types';
 import { AnimatePresence } from 'motion/react';
+import { trackEvent } from './services/tracking';
 
 const COURSES_URL = 'https://www.cruzeiroead.com.br/graduacao';
 
@@ -27,17 +28,27 @@ const App: React.FC = () => {
   }, []);
 
   const toggleWord = (id: string) => {
-    setSelectedIds(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(i => i !== id);
-      }
-      if (prev.length >= MAX_SELECTION) return prev;
-      return [...prev, id];
-    });
+    const word = WORDS.find(w => w.id === id);
+
+    if (selectedIds.includes(id)) {
+      const next = selectedIds.filter(i => i !== id);
+      setSelectedIds(next);
+      if (word) trackEvent('word_unselected', { word: word.label, selected_count: next.length });
+    } else {
+      if (selectedIds.length >= MAX_SELECTION) return;
+      const next = [...selectedIds, id];
+      setSelectedIds(next);
+      if (word) trackEvent('word_selected', { word: word.label, selected_count: next.length });
+    }
   };
 
   const handleCalculate = async () => {
     if (selectedIds.length < MIN_SELECTION) return;
+
+    trackEvent('quiz_submit', {
+      words: selectedWords,
+      total_words: selectedIds.length,
+    });
 
     if (hasCapturedLead && leadData) {
       setIsVocationalLoading(true);
@@ -181,6 +192,7 @@ const App: React.FC = () => {
               href={COURSES_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent('courses_direct_click', { origin: 'quiz_page' })}
               className="mt-6 text-slate-400 hover:text-[#002D5E] font-medium text-sm transition-colors group flex items-center gap-1"
             >
               Já sabe qual curso quer?{' '}
