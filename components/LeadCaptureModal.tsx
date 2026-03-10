@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { X } from 'lucide-react';
 import { proxyWebhook } from '../services/api';
 import PrivacyPolicyModal from './PrivacyPolicyModal';
+import { trackEvent, saveLead } from '../services/tracking';
 
 interface LeadCaptureModalProps {
   isOpen: boolean;
@@ -57,8 +58,7 @@ const LeadCaptureModal: React.FC<LeadCaptureModalProps> = ({ isOpen, onClose, on
 
   useEffect(() => {
     if (isOpen) {
-      console.log('LeadCaptureModal is now OPEN');
-      // 2. NO LIGHTBOX (ao enviar formulário): Recuperar do localStorage
+      trackEvent('lead_form_view', { origin: 'after_quiz' });
       const gclid = localStorage.getItem('gclid');
       setValue('gclid', gclid);
     }
@@ -115,7 +115,11 @@ const LeadCaptureModal: React.FC<LeadCaptureModalProps> = ({ isOpen, onClose, on
       console.log('Webhook response:', response);
 
       if (response.whatsapp_valido === true) {
-        // Sucesso - segue para resultado
+        await saveLead({ name: data.name, phone: cleanPhone });
+        trackEvent('lead_form_submit', {
+          name: data.name,
+          phone: cleanPhone,
+        });
         setProgress(100);
         setTimeout(() => {
           onSuccess({ ...data, phone: cleanPhone });
