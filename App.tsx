@@ -11,13 +11,22 @@ import { trackEvent } from './services/tracking';
 
 const COURSES_URL = 'https://www.cruzeiroead.com.br/graduacao';
 
+function loadSessionData<T>(key: string): T | null {
+  try {
+    const raw = sessionStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 const App: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [result, setResult] = useState<Recommendation | null>(null);
+  const [result, setResult] = useState<Recommendation | null>(() => loadSessionData('quiz_result'));
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isVocationalLoading, setIsVocationalLoading] = useState(false);
-  const [leadData, setLeadData] = useState<LeadData | null>(null);
-  const [hasCapturedLead, setHasCapturedLead] = useState(false);
+  const [leadData, setLeadData] = useState<LeadData | null>(() => loadSessionData('quiz_lead'));
+  const [hasCapturedLead, setHasCapturedLead] = useState(() => !!loadSessionData('quiz_lead'));
 
   useEffect(() => {
     const gclid = new URLSearchParams(window.location.search).get('gclid');
@@ -61,16 +70,20 @@ const App: React.FC = () => {
     setLeadData(data);
     setHasCapturedLead(true);
     setIsVocationalLoading(true);
+    sessionStorage.setItem('quiz_lead', JSON.stringify(data));
   }, []);
 
   const handleVocationalSuccess = useCallback((dados: Recommendation) => {
     setResult(dados);
     setIsVocationalLoading(false);
+    sessionStorage.setItem('quiz_result', JSON.stringify(dados));
   }, []);
 
   const handleRedo = () => {
     setResult(null);
     setSelectedIds([]);
+    sessionStorage.removeItem('quiz_result');
+    sessionStorage.removeItem('quiz_lead');
   };
 
   const canSubmit = selectedIds.length >= MIN_SELECTION;
