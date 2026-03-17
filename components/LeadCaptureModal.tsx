@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { X } from 'lucide-react';
 import { proxyWebhook } from '../services/api';
 import PrivacyPolicyModal from './PrivacyPolicyModal';
-import { trackEvent, saveLead } from '../services/tracking';
+import { trackEvent, saveLead, sendToGTM } from '../services/tracking';
 
 interface LeadCaptureModalProps {
   isOpen: boolean;
@@ -89,16 +89,6 @@ const LeadCaptureModal: React.FC<LeadCaptureModalProps> = ({ isOpen, onClose, on
     // Clean phone number (only numbers)
     const cleanPhone = data.phone.replace(/\D/g, '');
 
-    // GTM Event
-    if (typeof window !== 'undefined' && (window as any).dataLayer) {
-      (window as any).dataLayer.push({
-        event: 'quiz_event',
-        category: 'Form Submission',
-        action: 'Click',
-        label: 'Quiz Whats Lead'
-      });
-    }
-
     try {
       // PAYLOAD ESPERADO PELO N8N
       const payload = {
@@ -117,6 +107,10 @@ const LeadCaptureModal: React.FC<LeadCaptureModalProps> = ({ isOpen, onClose, on
       if (response.whatsapp_valido === true) {
         await saveLead({ name: data.name, phone: cleanPhone });
         trackEvent('lead_form_submit', {
+          name: data.name,
+          phone: cleanPhone,
+        });
+        sendToGTM('lead_submit', {
           name: data.name,
           phone: cleanPhone,
         });

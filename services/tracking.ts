@@ -1,5 +1,19 @@
 import { supabase } from './supabaseClient';
 
+// ─── GTM helper ───
+
+declare global {
+  interface Window {
+    dataLayer: Record<string, unknown>[];
+  }
+}
+
+export function sendToGTM(eventName: string, data: Record<string, unknown> = {}): void {
+  if (typeof window === 'undefined') return;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: eventName, ...data });
+}
+
 const SESSION_KEY = 'vocacional_session';
 const SESSION_CREATED_KEY = 'vocacional_session_created';
 
@@ -105,6 +119,8 @@ export function trackEvent(
   };
 
   eventBuffer.push(event);
+
+  sendToGTM(eventName, { ...metadata, page: event.page, step: event.step });
 
   if (eventBuffer.length >= FLUSH_SIZE) {
     flushEvents();
