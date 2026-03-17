@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { proxyWebhook } from '../services/api';
-import { trackEvent, flushEvents, updateLeadProfile } from '../services/tracking';
+import { trackEvent, flushEvents, updateLeadProfile, sendToGTM } from '../services/tracking';
 import { 
   CheckCircle2, 
   BookOpen, 
@@ -122,6 +122,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRed
         quiz_profile: recommendation.perfil_dominante,
         recommended_course: topCourse,
       });
+      sendToGTM('result_view', { profile: recommendation.perfil_dominante });
       updateLeadProfile({
         quizProfile: recommendation.perfil_dominante,
         recommendedCourse: topCourse,
@@ -153,6 +154,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRed
       origin: 'result',
       position,
     });
+    sendToGTM('course_click', { course_name: course.curso });
     flushEvents();
 
     try {

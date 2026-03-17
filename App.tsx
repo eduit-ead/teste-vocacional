@@ -7,7 +7,7 @@ import LeadCaptureModal, { LeadData } from './components/LeadCaptureModal';
 import LoadingScreen from './components/LoadingScreen';
 import { Recommendation } from './types';
 import { AnimatePresence } from 'motion/react';
-import { trackEvent } from './services/tracking';
+import { trackEvent, sendToGTM } from './services/tracking';
 
 const COURSES_URL = 'https://www.cruzeiroead.com.br/graduacao';
 
@@ -58,6 +58,7 @@ const App: React.FC = () => {
       words: selectedWords,
       total_words: selectedIds.length,
     });
+    sendToGTM('quiz_complete', { words: selectedWords });
 
     if (hasCapturedLead && leadData) {
       setIsVocationalLoading(true);
