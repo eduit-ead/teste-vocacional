@@ -9,6 +9,25 @@ const corsHeaders = {
 const CATALOG_URL = Deno.env.get("CATALOG_SUPABASE_URL") ?? "https://vtlbndvcgajcoajhcnnx.supabase.co/rest/v1";
 const CATALOG_KEY = Deno.env.get("CATALOG_SUPABASE_KEY") ?? "";
 
+const STOPWORDS = new Set(["de", "da", "do", "das", "dos", "e", "em", "a", "o", "para", "com", "no", "na", "nos", "nas", "um", "uma"]);
+
+async function queryByPattern(pattern: string) {
+  const url = `${CATALOG_URL}/cursos_catalogo_ia?curso=${encodeURIComponent(`ilike.${pattern}`)}&select=curso,raw_json&limit=1`;
+  const res = await fetch(url, {
+    headers: { apikey: CATALOG_KEY, Authorization: `Bearer ${CATALOG_KEY}`, Accept: "application/json" },
+  });
+  if (!res.ok) return null;
+  const rows = await res.json();
+  return rows?.length > 0 ? rows[0] : null;
+}
+
+function buildKeywordPattern(curso: string): string {
+  const words = curso
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !STOPWORDS.has(w.toLowerCase()));
+  return `*${words.join("*")}*`;
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 200, headers: corsHeaders });
@@ -32,37 +51,31 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    const encodedCurso = encodeURIComponent(`ilike.${curso}`);
-    const apiUrl = `${CATALOG_URL}/cursos_catalogo_ia?curso=${encodedCurso}&select=curso,raw_json&limit=1`;
+    // 1. Busca exata (case-insensitive)
+    let row = await queryByPattern(curso);
 
-    const response = await fetch(apiUrl, {
-      headers: {
-        apikey: CATALOG_KEY,
-        Authorization: `Bearer ${CATALOG_KEY}`,
-        Accept: "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      return new Response(JSON.stringify({ error: "Erro ao consultar catálogo" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    // 2. Busca com wildcards nas palavras significativas
+    if (!row) {
+      const keywordPattern = buildKeywordPattern(curso);
+      row = await queryByPattern(keywordPattern);
     }
 
-    const rows = await response.json();
+    // 3. Busca pelas 2 primeiras palavras significativas
+    if (!row) {
+      const words = curso.split(/\s+/).filter(w => w.length > 2 && !STOPWORDS.has(w.toLowerCase()));
+      if (words.length >= 2) {
+        row = await queryByPattern(`*${words[0]}*${words[1]}*`);
+      }
+    }
 
-    if (!rows || rows.length === 0) {
+    if (!row) {
       return new Response(JSON.stringify({ found: false }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const row = rows[0];
-    const rawJson = typeof row.raw_json === "string"
-      ? JSON.parse(row.raw_json)
-      : row.raw_json;
+    const rawJson = typeof row.raw_json === "string" ? JSON.parse(row.raw_json) : row.raw_json;
 
     return new Response(JSON.stringify({ found: true, data: rawJson }), {
       status: 200,
