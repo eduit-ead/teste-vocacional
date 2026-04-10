@@ -100,6 +100,7 @@ const STEP_MAP: Record<string, number> = {
   lead_form_submit: 3,
   result_view: 4,
   course_click: 5,
+  course_info_view: 5,
   courses_direct_click: 5,
 };
 
