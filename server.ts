@@ -2,6 +2,18 @@ import express from "express";
 import cors from "cors";
 import { createServer as createViteServer } from "vite";
 import axios from "axios";
+import { readFileSync } from "fs";
+
+try {
+  const env = readFileSync(".env", "utf-8");
+  for (const line of env.split("\n")) {
+    const [key, ...rest] = line.split("=");
+    if (key && rest.length) process.env[key.trim()] = rest.join("=").trim();
+  }
+} catch {}
+
+const CATALOG_URL = process.env.CATALOG_SUPABASE_URL ?? "https://vtlbndvcgajcoajhcnnx.supabase.co/rest/v1";
+const CATALOG_KEY = process.env.CATALOG_SUPABASE_KEY ?? "";
 
 async function startServer() {
   const app = express();
@@ -37,6 +49,37 @@ async function startServer() {
         targetStatus: status,
         targetData: data
       });
+    }
+  });
+
+  // Proxy for course catalog (keeps secret key server-side)
+  app.get("/api/catalog", async (req, res) => {
+    const curso = req.query.curso as string;
+    if (!curso) {
+      res.status(400).json({ error: "Parâmetro 'curso' obrigatório" });
+      return;
+    }
+
+    try {
+      const apiUrl = `${CATALOG_URL}/cursos_catalogo_ia?curso=ilike.${encodeURIComponent(curso)}&select=curso,raw_json&limit=1`;
+      const response = await axios.get(apiUrl, {
+        headers: { apikey: CATALOG_KEY, Authorization: `Bearer ${CATALOG_KEY}` },
+      });
+
+      const rows = response.data;
+      if (!rows || rows.length === 0) {
+        res.json({ found: false });
+        return;
+      }
+
+      const rj = typeof rows[0].raw_json === "string"
+        ? JSON.parse(rows[0].raw_json)
+        : rows[0].raw_json;
+
+      res.json({ found: true, data: rj });
+    } catch (error: any) {
+      console.error("Catalog proxy error:", error.message);
+      res.status(500).json({ found: false, error: error.message });
     }
   });
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { proxyWebhook } from '../services/api';
 import { trackEvent, flushEvents, updateLeadProfile, sendToGTM } from '../services/tracking';
+import CourseInfoModal from './CourseInfoModal';
 import { 
   CheckCircle2, 
   BookOpen, 
@@ -110,6 +111,7 @@ const AreasChart: React.FC<{ areas?: RankedArea[] }> = ({ areas }) => {
 
 const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRedo }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [courseInfoModal, setCourseInfoModal] = useState<{ course: RecommendedCourse; position: number } | null>(null);
   const trackedResult = useRef(false);
 
   useEffect(() => {
@@ -304,12 +306,15 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRed
                 </div>
 
                 <div className="mt-auto">
-                  <button 
-                    onClick={() => handleCourseClick(curso, idx + 1)}
-                    className="w-full py-4 bg-[#FFC107] hover:bg-[#FFD54F] text-[#0A2F5A] font-black rounded-xl shadow-md transition-all flex items-center justify-center gap-2 group"
+                  <button
+                    onClick={() => {
+                      trackEvent('course_info_view', { course_name: curso.curso, origin: 'result', position: idx + 1 });
+                      setCourseInfoModal({ course: curso, position: idx + 1 });
+                    }}
+                    className="w-full py-4 bg-[#0A2F5A] hover:bg-[#0d3d75] text-white font-black rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
                   >
-                    <span className="text-xl">🗨️</span>
-                    Quero saber o preço
+                    <span className="text-xl">📋</span>
+                    Ver mais informações
                   </button>
                 </div>
               </motion.div>
@@ -330,12 +335,15 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRed
                   <p className="text-xs text-slate-400 font-bold uppercase tracking-tighter">{curso.area} | {curso.grau}</p>
                   <p className="text-xs text-slate-400 font-bold uppercase tracking-tighter">{curso.semestres} semestres</p>
                 </div>
-                <button 
-                  onClick={() => handleCourseClick(curso, idx + 3)}
-                  className="mt-auto w-full py-3 border-2 border-[#FFC107] text-[#0A2F5A] font-bold rounded-xl hover:bg-[#FFC107] transition-all flex items-center justify-center gap-2"
+                <button
+                  onClick={() => {
+                    trackEvent('course_info_view', { course_name: curso.curso, origin: 'result', position: idx + 3 });
+                    setCourseInfoModal({ course: curso, position: idx + 3 });
+                  }}
+                  className="mt-auto w-full py-3 border-2 border-[#0A2F5A] text-[#0A2F5A] font-bold rounded-xl hover:bg-[#0A2F5A] hover:text-white transition-all flex items-center justify-center gap-2"
                 >
-                  <span className="text-lg">🗨️</span>
-                  Ver preço
+                  <span className="text-lg">📋</span>
+                  Ver mais informações
                 </button>
               </motion.div>
             ))}
@@ -384,6 +392,19 @@ const ResultPage: React.FC<ResultPageProps> = ({ recommendation, userData, onRed
           <p className="text-slate-400 text-sm font-medium">© 2026 CruzeiroEAD. Todos os direitos reservados</p>
         </footer>
       </div>
+
+      {/* Modal de Informações do Curso */}
+      {courseInfoModal && (
+        <CourseInfoModal
+          courseName={courseInfoModal.course.curso}
+          isOpen={!!courseInfoModal}
+          onClose={() => setCourseInfoModal(null)}
+          onVerPreco={() => {
+            setCourseInfoModal(null);
+            handleCourseClick(courseInfoModal.course, courseInfoModal.position);
+          }}
+        />
+      )}
 
       {/* Modal de Análise Completa */}
       <AnimatePresence>
